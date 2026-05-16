@@ -26,7 +26,7 @@ Cloudflare Pages build settings:
 
 - Build command: `npm run build`
 - Build output directory: `dist`
-- Node.js version: `20`
+- Node.js version: `22.12.0` or newer
 
 Manual deployment:
 
