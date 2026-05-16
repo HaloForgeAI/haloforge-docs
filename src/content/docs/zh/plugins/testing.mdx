@@ -1,0 +1,55 @@
+---
+title: 测试与排查
+description: 校验插件包、本地安装，并排查插件面板加载失败。
+---
+
+每次交付前都跑同一套检查：
+
+```bash
+npm run typecheck
+npm run build
+cargo fmt --check
+cargo check
+npx @haloforge/plugin-pack check .
+npx @haloforge/plugin-pack pack . --out dist/package
+```
+
+## 本地安装
+
+```bash
+cd /path/to/HaloForge
+npm run hf -- plugin install local /path/to/plugin/dist/package/<plugin-id>-<version>.hfpkg --json
+npm run hf -- plugin list --json
+```
+
+插件应显示：
+
+- `enabled: true`
+- `state: "active"`
+- `error_message: null`
+
+## 检查包内容
+
+```bash
+unzip -l dist/package/dev.example.my-plugin-0.1.0.hfpkg
+```
+
+UI 插件至少应包含：
+
+- `manifest.json`
+- 前端 bundle
+- manifest 声明的 CSS
+- manifest 声明的 native library
+- manifest 引用的 icon/assets
+
+## `Plugin panel not loaded`
+
+优先检查：
+
+1. `registerPlugin()` 的 ID 是否和 `manifest.json` 完全一致。
+2. `entry.frontend` 是否指向包内实际 JS 文件。
+3. `integration.*.panel_entry` 是否指向 panel bundle。
+4. 包里是否包含前端 bundle 和 CSS。
+5. bundle 执行时是否有 JavaScript 异常。
+6. Rust 后端是否加载并注册命令。
+7. host capabilities 和 permissions 是否声明完整。

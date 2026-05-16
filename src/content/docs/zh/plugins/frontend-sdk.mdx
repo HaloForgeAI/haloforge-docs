@@ -1,0 +1,75 @@
+---
+title: 前端 SDK
+description: 使用 @haloforge/plugin-sdk 注册插件 UI 并消费宿主能力。
+---
+
+前端 bundle 必须只注册一次，并使用和 `manifest.json` 完全一致的 plugin ID。
+
+```tsx
+import { definePlugin, registerPlugin } from "@haloforge/plugin-sdk";
+import { MyPanel } from "./Panel";
+import "./styles.css";
+
+export default registerPlugin("dev.example.my-plugin", definePlugin({
+  panel: MyPanel,
+}));
+```
+
+## 核心 Helper
+
+| Helper | 用途 |
+| --- | --- |
+| `definePlugin()` | Level 1/2 面板和 slot |
+| `defineModulePlugin()` | Level 0 模块 |
+| `defineAssistantPlugin()` | Level 3 assistant |
+| `registerPlugin()` | 将 bundle 注册到 HaloForge runtime |
+| `invokePlugin()` | 调用本插件 Rust 命令 |
+| `invokeOtherPlugin()` | 调用其他插件命令 |
+| `usePluginSettings()` | 读取和更新插件设置 |
+| `useHostTheme()` | 读取宿主主题和 token |
+| `useHostAI()` | 复用 AIChat 模型和 transport |
+| `AppSelect` | 渲染 HaloForge 风格下拉控件 |
+
+## 调用 Rust 命令
+
+```tsx
+import { invokePlugin } from "@haloforge/plugin-sdk";
+
+interface PingResult {
+  ok: boolean;
+  message: string;
+}
+
+export async function ping() {
+  return invokePlugin<PingResult>("ping", { source: "panel" });
+}
+```
+
+## AppSelect
+
+combo box 和下拉框使用 `AppSelect`，不要直接写原生 `<select>`。
+
+```tsx
+import { AppSelect } from "@haloforge/plugin-sdk";
+
+export function ModePicker({ value, onChange }) {
+  return (
+    <AppSelect value={value} onChange={(event) => onChange(event.target.value)}>
+      <option value="overview">Overview</option>
+      <option value="diagnostics">Diagnostics</option>
+    </AppSelect>
+  );
+}
+```
+
+## 不要使用私有 bridge
+
+避免：
+
+```ts
+window.__HF_HOST
+window.__HALOFORGE_PLUGIN_HOST__
+invoke("plugin_invoke", ...)
+```
+
+如果 SDK 没有你需要的宿主能力，先在 `haloforge-plugin-api` 中新增公开 helper。

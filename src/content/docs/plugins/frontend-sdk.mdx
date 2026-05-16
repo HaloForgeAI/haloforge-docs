@@ -1,0 +1,77 @@
+---
+title: Frontend SDK
+description: Register plugin UI and consume host capabilities through @haloforge/plugin-sdk.
+---
+
+The frontend bundle must register exactly once with the same plugin ID as `manifest.json`.
+
+```tsx
+import { definePlugin, registerPlugin } from "@haloforge/plugin-sdk";
+import { MyPanel } from "./Panel";
+import "./styles.css";
+
+export default registerPlugin("dev.example.my-plugin", definePlugin({
+  panel: MyPanel,
+}));
+```
+
+## Core Helpers
+
+| Helper | Use |
+| --- | --- |
+| `definePlugin()` | Level 1/2 plugin panels and slots |
+| `defineModulePlugin()` | Level 0 module plugins |
+| `defineAssistantPlugin()` | Level 3 assistant plugins |
+| `registerPlugin()` | Register the frontend bundle with HaloForge |
+| `invokePlugin()` | Call this plugin's Rust backend commands |
+| `invokeOtherPlugin()` | Call another plugin's declared commands |
+| `usePluginSettings()` | Read and update plugin settings |
+| `useHostTheme()` | Read active host theme and tokens |
+| `useHostAI()` | Reuse AIChat model and transport integration |
+| `AppSelect` | Render HaloForge-styled dropdown/listbox controls |
+
+## Calling Rust Commands
+
+```tsx
+import { invokePlugin } from "@haloforge/plugin-sdk";
+
+interface PingResult {
+  ok: boolean;
+  message: string;
+}
+
+export async function ping() {
+  return invokePlugin<PingResult>("ping", { source: "panel" });
+}
+```
+
+## Host-Styled Select
+
+Use `AppSelect` instead of a raw `<select>` when rendering combo boxes.
+
+```tsx
+import { AppSelect } from "@haloforge/plugin-sdk";
+
+export function ModePicker({ value, onChange }) {
+  return (
+    <AppSelect value={value} onChange={(event) => onChange(event.target.value)}>
+      <option value="overview">Overview</option>
+      <option value="diagnostics">Diagnostics</option>
+    </AppSelect>
+  );
+}
+```
+
+## Private Bridges Are Off Limits
+
+The SDK may use an internal bridge to talk to the current HaloForge runtime. Plugin source should not read those internals directly.
+
+Avoid:
+
+```ts
+window.__HF_HOST
+window.__HALOFORGE_PLUGIN_HOST__
+invoke("plugin_invoke", ...)
+```
+
+Use the SDK helper that matches the feature. If no helper exists, add one to `haloforge-plugin-api` first.

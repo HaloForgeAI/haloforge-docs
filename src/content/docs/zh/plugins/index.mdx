@@ -1,0 +1,115 @@
+---
+title: 插件开发
+description: 使用 Rust API、TypeScript SDK 和官方 packager 开发 HaloForge 插件。
+---
+
+import { Card, CardGrid, Steps } from '@astrojs/starlight/components';
+
+HaloForge 插件可以为桌面端增加新模块、功能页、UI slot、assistant、后端服务和 workflow 能力。
+
+最重要的规则是：**使用公开 Plugin API 和 SDK，不依赖 HaloForge 内部实现。** 插件应该能在 Community Cloud、Enterprise Server 或未来桌面 runtime 之间保持兼容。
+
+<CardGrid>
+  <Card title="从模板开始" icon="puzzle">
+    开发完整模块插件时，使用 Level 0 Rust + React 模板。
+  </Card>
+  <Card title="使用公开 SDK" icon="setting">
+    通过 `@haloforge/plugin-sdk` 读取宿主状态、主题 token、AI transport、文件选择器和托管服务能力。
+  </Card>
+  <Card title="统一打包" icon="rocket">
+    使用 `@haloforge/plugin-pack` 校验和打包，再用 `hf plugin install local` 本地安装。
+  </Card>
+</CardGrid>
+
+## 插件形态
+
+| Level | 界面/能力 | 典型场景 |
+| --- | --- | --- |
+| 0 | 顶级模块 | Image Studio、Switchboard 这类完整工作区 |
+| 1 | 现有模块里的功能页 | DevKit 里的 Git tab |
+| 2 | UI slot 注入 | 工具栏按钮或消息操作 |
+| 3 | Assistant 注册 | 带独立提示词和可选 UI 的 AI 助手 |
+| 4 | 无头后端服务 | workflow step、本地工具集成、插件间服务 |
+
+优先选择能满足产品面的最小级别。
+
+## 推荐目录结构
+
+```text
+my-plugin/
+  manifest.json
+  backend/
+    Cargo.toml
+    src/lib.rs
+  app/
+    package.json
+    src/index.tsx
+    src/Panel.tsx
+    src/styles.css
+  assets/
+  dist/
+```
+
+官方模板在 [`haloforge-plugin-api/templates/level0-rust-react`](https://github.com/HaloForgeAI/haloforge-plugin-api/tree/main/templates/level0-rust-react)。
+
+## 快速开始
+
+<Steps>
+  1. 复制 Level 0 模板。
+
+     ```bash
+     cp -R /path/to/haloforge-plugin-api/templates/level0-rust-react my-plugin
+     ```
+
+  2. 替换 plugin ID、package/crate 名称、模块名称和命令名。
+
+  3. 构建前端和后端。
+
+     ```bash
+     cd app
+     npm install
+     npm run typecheck
+     npm run build
+
+     cd ../backend
+     cargo check
+     ```
+
+  4. 校验和打包。
+
+     ```bash
+     cd ..
+     npx @haloforge/plugin-pack check .
+     npx @haloforge/plugin-pack pack . --out dist/package
+     ```
+
+  5. 安装到本地 HaloForge。
+
+     ```bash
+     cd /path/to/HaloForge
+     npm run hf -- plugin install local /path/to/my-plugin/dist/package/dev.example.my-plugin-0.1.0.hfpkg --json
+     ```
+</Steps>
+
+## 开发原则
+
+- 所有宿主集成都使用 `@haloforge/plugin-sdk`。
+- Rust 后端使用 `haloforge-plugin-api`。
+- 校验和打包使用 `@haloforge/plugin-pack`。
+- 权限保持最小且明确。
+- CSS 必须局部作用在插件根 class 下。
+- 使用 HaloForge 主题 token，不写死单一色盘。
+- SDK 有对应控件时使用 SDK 控件，例如 `AppSelect`。
+- 官方用户可见插件必须提供英文和中文文案。
+- 能在社区版工作的能力必须提供社区版路径。
+
+## 不要这样做
+
+不要：
+
+- 读取 `window.__HF_HOST`
+- 依赖私有 host store
+- 手写 `plugin_invoke` wire command
+- SDK 已有 helper 时直接调用私有 Tauri 命令
+- 在插件 CSS 里设置 `body`、`html` 或无作用域全局选择器
+- 对社区版可用能力显示企业版专属文案

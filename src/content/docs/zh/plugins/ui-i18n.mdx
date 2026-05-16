@@ -1,0 +1,65 @@
+---
+title: UI 与多语言
+description: 让插件在主题、屏幕尺寸和语言上都像 HaloForge 原生界面。
+---
+
+HaloForge 插件应该像宿主的一部分，而不是嵌入的独立网页。
+
+## 样式规则
+
+- 所有 CSS 都放在插件根 class 下，例如 `.hfmy-root`。
+- 不要设置 `body`、`html` 或无作用域全局元素。
+- 优先使用 HaloForge CSS 变量：
+  - `--color-background`
+  - `--color-surface`
+  - `--color-foreground`
+  - `--color-foreground-secondary`
+  - `--color-border`
+  - `--color-primary`
+  - `--hf-shell-bg`
+- 必须支持 light 和 dark 主题。
+- 页面布局不要嵌套多层 card。
+- 图标按钮使用 lucide 图标。
+- 下拉框使用 SDK `AppSelect`。
+- 窄屏下文本、按钮和 chip 不能溢出。
+
+## 翻译模式
+
+官方用户可见插件应提供英文和中文。
+
+```ts
+const en = {
+  "app.title": "Image Studio",
+  "settings.gateway": "Gateway",
+} as const;
+
+type TranslationKey = keyof typeof en;
+
+const zh: Record<TranslationKey, string> = {
+  "app.title": "Image Studio",
+  "settings.gateway": "网关",
+};
+
+function getLocale() {
+  const stored = localStorage.getItem("hf:locale");
+  if (stored === "en" || stored === "zh") return stored;
+  return navigator.language.toLowerCase().startsWith("zh") ? "zh" : "en";
+}
+```
+
+缺失文案回退英文，不要在组件里散落硬编码文案。
+
+## 社区版友好文案
+
+社区版能用的能力不要显示企业版专属文案。
+
+推荐：
+
+- HaloForge Cloud gateway
+- Managed gateway
+- Custom endpoint
+
+避免：
+
+- Community Edition 中显示 Enterprise gateway
+- 本地端点可用时显示 Enterprise required

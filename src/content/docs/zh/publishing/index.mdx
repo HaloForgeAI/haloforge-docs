@@ -1,0 +1,45 @@
+---
+title: 插件发布
+description: 打包、签名、提交、审核和发布 HaloForge 插件。
+---
+
+官方插件和社区插件使用同一套发布工具链。
+
+## 打包
+
+```bash
+npx @haloforge/plugin-pack check .
+npx @haloforge/plugin-pack pack . --release --out dist/package
+```
+
+## 生成 Catalog Metadata
+
+```bash
+npx @haloforge/plugin-pack metadata dist/package/<plugin-id>-<version>.hfpkg \
+  --signing-key-id haloforge-official-2026-05 \
+  --signing-key-env HF_PLUGIN_SIGNING_PRIVATE_KEY \
+  --pretty \
+  --output dist/catalog-draft.json
+```
+
+## 提交
+
+```bash
+npx @haloforge/plugin-pack submit dist/catalog-draft.json --token-env HF_ADMIN_TOKEN
+```
+
+官方插件仓库应通过 GitHub Actions 执行，并把签名 key 放在 repository secrets 中。
+
+## 审核模型
+
+提交 metadata 会创建 draft，管理员审核：
+
+- source label
+- package signature
+- manifest permissions
+- compatibility
+- artifact URL
+- homepage/repository URL
+- trust policy
+
+只有审核通过后才发布到公开 catalog。

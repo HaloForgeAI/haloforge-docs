@@ -1,0 +1,22 @@
+---
+title: Repository Map
+description: Understand which HaloForge repository owns each product surface.
+---
+
+HaloForge is split by deployment and ownership boundary.
+
+| Repository | Owns |
+| --- | --- |
+| [`HaloForge`](https://github.com/HaloForgeAI/HaloForge) | Desktop app, Tauri runtime, local plugin loader, local UI shell |
+| [`haloforge-plugin-api`](https://github.com/HaloForgeAI/haloforge-plugin-api) | Rust plugin API, TypeScript SDK, packager, templates, plugin skill |
+| [`haloforge-docs`](https://github.com/HaloForgeAI/haloforge-docs) | Public documentation site |
+| [`HaloForge-Community-Cloud`](https://github.com/HaloForgeAI/HaloForge-Community-Cloud) | Public API, admin, homepage, status, Cloudflare deployment |
+| [`HaloForge-Enterprise-Server`](https://github.com/HaloForgeAI/HaloForge-Enterprise-Server) | Enterprise API, admin, private catalog, knowledge, deployment |
+
+## Rule of Thumb
+
+- Desktop runtime changes belong in `HaloForge`.
+- Plugin authoring contracts belong in `haloforge-plugin-api`.
+- Public documentation belongs in `haloforge-docs`.
+- Community server behavior belongs in `HaloForge-Community-Cloud`.
+- Enterprise server behavior belongs in `HaloForge-Enterprise-Server`.

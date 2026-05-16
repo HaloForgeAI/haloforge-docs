@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="HaloForge">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fb923c"/>
+      <stop offset="1" stop-color="#ea580c"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="52" fill="url(#g)"/>
+  <path fill="#fff" d="M62 61h35v50h62V61h35v134h-35v-53H97v53H62V61Z"/>
+  <path fill="rgba(255,255,255,.32)" d="M48 217h160v14H48z"/>
+</svg>

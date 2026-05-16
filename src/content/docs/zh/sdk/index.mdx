@@ -1,0 +1,39 @@
+---
+title: SDK 与 Host API
+description: HaloForge 插件作者使用的公开 SDK 能力。
+---
+
+TypeScript SDK 包是 [`@haloforge/plugin-sdk`](https://www.npmjs.com/package/@haloforge/plugin-sdk)。
+
+安装：
+
+```bash
+npm i @haloforge/plugin-sdk react react-dom @tauri-apps/api lucide-react
+```
+
+用途：
+
+- 插件注册
+- Rust 命令调用
+- 宿主导航
+- 宿主主题 token
+- AIChat 模型和 transport
+- 宿主文件选择器
+- 宿主事件
+- `AppSelect` 等宿主风格控件
+- 托管生图网关
+
+## 稳定 Host Capabilities
+
+| Manifest capability | SDK |
+| --- | --- |
+| `navigation` | `useHostNavigation()` |
+| `app_state` | `useHostAppState()` |
+| `file_intents` | `useHostFileIntent()` |
+| `file_dialogs` | `pickHostFile()` / `pickHostDirectory()` / `saveHostFile()` |
+| `aichat` | `useHostAI()` |
+| `enterprise_gateway` | `enterpriseGateway()` |
+| `theme_read` | `useHostTheme()` |
+| `event_subscribe` | `useHostEvent()` |
+
+如果插件需要这里没有的宿主能力，应先在 SDK 中新增文档化 helper，而不是直接访问私有宿主状态。

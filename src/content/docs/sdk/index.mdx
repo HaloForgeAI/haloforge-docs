@@ -1,0 +1,39 @@
+---
+title: SDK and Host API
+description: Public SDK surfaces for HaloForge plugin authors.
+---
+
+The TypeScript SDK lives in [`@haloforge/plugin-sdk`](https://www.npmjs.com/package/@haloforge/plugin-sdk).
+
+Install:
+
+```bash
+npm i @haloforge/plugin-sdk react react-dom @tauri-apps/api lucide-react
+```
+
+Use it for:
+
+- plugin registration
+- Rust command invocation
+- host navigation
+- host theme tokens
+- AIChat model and transport access
+- host file dialogs
+- host events
+- host-styled controls such as `AppSelect`
+- managed image gateway access
+
+## Stable Host Capabilities
+
+| Manifest capability | SDK surface |
+| --- | --- |
+| `navigation` | `useHostNavigation()` |
+| `app_state` | `useHostAppState()` |
+| `file_intents` | `useHostFileIntent()` |
+| `file_dialogs` | `pickHostFile()`, `pickHostDirectory()`, `saveHostFile()` |
+| `aichat` | `useHostAI()` |
+| `enterprise_gateway` | `enterpriseGateway()` |
+| `theme_read` | `useHostTheme()` |
+| `event_subscribe` | `useHostEvent()` |
+
+If plugin code needs a host behavior not listed here, add a documented SDK helper instead of reaching into private host state.

@@ -1,0 +1,54 @@
+---
+title: 托管生图网关
+description: 设计同时支持 HaloForge Cloud、Enterprise Server 和社区版自定义端点的生图插件。
+---
+
+生图插件应支持两条路径：
+
+1. 通过 HaloForge Cloud 或 Enterprise Server 的托管网关。
+2. 用户在社区版配置自定义端点。
+
+这样插件既能支持本地用户，也能在登录宿主后使用受管、可审计的网关。
+
+## 托管网关
+
+SDK helper 名为 `enterpriseGateway()`，这是历史兼容命名。产品 UI 应把它当作宿主管理的生图网关。
+
+Manifest：
+
+```json
+{
+  "host_capabilities": ["enterprise_gateway"],
+  "permissions": [
+    { "type": "host_enterprise_gateway_access" }
+  ]
+}
+```
+
+前端：
+
+```tsx
+import { enterpriseGateway } from "@haloforge/plugin-sdk";
+
+const gateway = enterpriseGateway();
+const result = await gateway.generateImages({
+  model: "gpt-image-1",
+  prompt: "Create a polished HaloForge plugin icon.",
+  size: "1024x1024",
+  n: 1,
+  response_format: "url",
+});
+```
+
+宿主会通过当前登录的 Cloud 或 Enterprise session 转发请求，插件不会拿到 Cloud session token。
+
+## 社区版自定义端点
+
+社区版应提供这些设置：
+
+- 网关模式：auto、HaloForge Cloud、custom endpoint
+- custom base URL
+- optional API key
+- 默认模型和尺寸
+
+OpenAI-compatible 端点如果涉及 CORS 或密钥处理，建议通过 Rust 后端请求，并声明 `network_http`。

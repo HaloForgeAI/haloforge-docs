@@ -1,0 +1,68 @@
+---
+title: UI and i18n
+description: Make plugin panels feel native in HaloForge across themes, screen sizes, and languages.
+---
+
+HaloForge plugins should look like part of the host app, not like embedded web pages.
+
+## Styling Rules
+
+- Scope all plugin CSS under a root class such as `.hfmy-root`.
+- Do not style `body`, `html`, or unscoped global elements.
+- Use HaloForge CSS variables first:
+  - `--color-background`
+  - `--color-surface`
+  - `--color-foreground`
+  - `--color-foreground-secondary`
+  - `--color-border`
+  - `--color-primary`
+  - `--hf-shell-bg`
+- Support light and dark themes.
+- Keep cards at 8px radius or less unless the host surface uses another established radius.
+- Avoid nested cards for page layout.
+- Use lucide icons for icon buttons.
+- Use SDK controls such as `AppSelect` for selects and combo boxes.
+- Keep labels and buttons readable on narrow screens.
+
+## Translation Pattern
+
+Official user-facing plugins should ship English and Chinese strings.
+
+```ts
+const en = {
+  "app.title": "Image Studio",
+  "settings.gateway": "Gateway",
+} as const;
+
+type TranslationKey = keyof typeof en;
+
+const zh: Record<TranslationKey, string> = {
+  "app.title": "Image Studio",
+  "settings.gateway": "网关",
+};
+
+function getLocale() {
+  const stored = localStorage.getItem("hf:locale");
+  if (stored === "en" || stored === "zh") return stored;
+  return navigator.language.toLowerCase().startsWith("zh") ? "zh" : "en";
+}
+```
+
+Use fallback-to-English behavior for missing strings and avoid scattering literal labels across components.
+
+## Community-Friendly Language
+
+Do not show enterprise-only language in a feature that also works in Community Edition.
+
+Use:
+
+- "HaloForge Cloud gateway"
+- "Managed gateway"
+- "Custom endpoint"
+
+Avoid:
+
+- "Enterprise gateway" on a Community Edition install
+- "Enterprise required" when a local endpoint can work
+
+Enterprise-specific labels are fine inside a screen that is explicitly about Enterprise Server or private organization policy.

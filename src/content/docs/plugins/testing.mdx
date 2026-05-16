@@ -1,0 +1,59 @@
+---
+title: Testing and Debugging
+description: Validate plugin packages, install locally, and diagnose panel loading failures.
+---
+
+Run the same checks before every handoff:
+
+```bash
+npm run typecheck
+npm run build
+cargo fmt --check
+cargo check
+npx @haloforge/plugin-pack check .
+npx @haloforge/plugin-pack pack . --out dist/package
+```
+
+## Local Install
+
+```bash
+cd /path/to/HaloForge
+npm run hf -- plugin install local /path/to/plugin/dist/package/<plugin-id>-<version>.hfpkg --json
+npm run hf -- plugin list --json
+```
+
+The installed plugin should show:
+
+- `enabled: true`
+- `state: "active"`
+- `error_message: null`
+
+## Package Inspection
+
+Inspect a package before installing:
+
+```bash
+unzip -l dist/package/dev.example.my-plugin-0.1.0.hfpkg
+```
+
+For a UI plugin, confirm the package contains:
+
+- `manifest.json`
+- frontend bundle
+- frontend stylesheet if declared
+- native library when `entry.native` is declared
+- icon/assets referenced by the manifest
+
+## `Plugin panel not loaded`
+
+Check these first:
+
+1. `registerPlugin()` uses the exact same ID as `manifest.json`.
+2. `entry.frontend` points to the built JavaScript file inside the package.
+3. `integration.*.panel_entry` points to the panel bundle.
+4. The package contains the frontend bundle and CSS.
+5. The bundle executed without a JavaScript error.
+6. The Rust backend loaded and registered commands.
+7. Required host capabilities and permissions were declared.
+
+If the bundle executed but did not register a panel, HaloForge should report that clearly in the plugin slot error area.

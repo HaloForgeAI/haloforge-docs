@@ -1,0 +1,44 @@
+---
+title: HaloForge Documentation
+description: Build, publish, and operate HaloForge extensions with the official plugin API, SDK, and packaging tools.
+template: splash
+hero:
+  tagline: Developer documentation for HaloForge plugins, SDKs, publishing, and platform integration.
+  image:
+    file: ../../assets/haloforge-mark.svg
+  actions:
+    - text: Start building plugins
+      link: /plugins/
+      icon: right-arrow
+      variant: primary
+    - text: View SDK reference
+      link: /sdk/
+      icon: document
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## What This Site Covers
+
+<CardGrid>
+  <Card title="Plugin development" icon="puzzle">
+    Build Level 0 modules, feature panels, UI slots, assistants, and backend services with the public HaloForge plugin contract.
+  </Card>
+  <Card title="SDK and host API" icon="setting">
+    Use documented React hooks, host components, file dialogs, AI transport, and managed image gateway access without private host bridges.
+  </Card>
+  <Card title="Publishing" icon="rocket">
+    Package, sign, submit, review, and publish plugins through the same workflow used by official HaloForge plugins.
+  </Card>
+</CardGrid>
+
+## Canonical Repositories
+
+- [`HaloForgeAI/HaloForge`](https://github.com/HaloForgeAI/HaloForge) contains the desktop runtime, plugin loader, and local app shell.
+- [`HaloForgeAI/haloforge-plugin-api`](https://github.com/HaloForgeAI/haloforge-plugin-api) contains the Rust API crate, TypeScript SDK, packager, templates, and plugin authoring skill.
+- [`HaloForgeAI/HaloForge-Community-Cloud`](https://github.com/HaloForgeAI/HaloForge-Community-Cloud) contains public Cloudflare Workers and Pages deployment surfaces.
+- [`HaloForgeAI/HaloForge-Enterprise-Server`](https://github.com/HaloForgeAI/HaloForge-Enterprise-Server) contains enterprise deployment and private control plane code.
+
+## Current Focus
+
+The first complete documentation block is plugin development. The next blocks should cover desktop runtime development, catalog publishing, enterprise server integration, and HaloCode runtime packaging.

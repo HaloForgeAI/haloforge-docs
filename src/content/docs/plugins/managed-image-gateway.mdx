@@ -1,0 +1,65 @@
+---
+title: Managed Image Gateway
+description: Design image generation plugins that work with HaloForge Cloud, Enterprise Server, and Community Edition custom endpoints.
+---
+
+Image generation plugins should support two paths:
+
+1. **Managed gateway** through HaloForge Cloud or Enterprise Server.
+2. **Custom endpoint** configured by the user for Community Edition.
+
+This keeps the plugin usable for local users while allowing signed-in hosts to provide a managed, audited gateway.
+
+## Managed Gateway
+
+The SDK helper is named `enterpriseGateway()` for compatibility with the first implementation. Treat it as a host-managed image gateway in product UI.
+
+Manifest:
+
+```json
+{
+  "host_capabilities": ["enterprise_gateway"],
+  "permissions": [
+    { "type": "host_enterprise_gateway_access" }
+  ]
+}
+```
+
+Frontend:
+
+```tsx
+import { enterpriseGateway } from "@haloforge/plugin-sdk";
+
+const gateway = enterpriseGateway();
+const result = await gateway.generateImages({
+  model: "gpt-image-1",
+  prompt: "Create a polished HaloForge plugin icon.",
+  size: "1024x1024",
+  n: 1,
+  response_format: "url",
+});
+```
+
+The host forwards the request through the active signed-in Cloud or Enterprise session. The plugin does not receive Cloud session tokens.
+
+## Community Custom Endpoint
+
+For Community Edition, expose settings such as:
+
+- gateway mode: auto, HaloForge Cloud, custom endpoint
+- custom base URL
+- optional custom API key
+- default model and size
+
+For OpenAI-compatible endpoints, route requests through Rust if CORS or key handling matters. Declare `network_http` when the backend performs outbound HTTP.
+
+## UI Labels
+
+Use these labels:
+
+- HaloForge Cloud gateway
+- Managed gateway
+- Custom endpoint
+- Mock gateway in local development only
+
+Avoid showing "Enterprise gateway" to Community Edition users.

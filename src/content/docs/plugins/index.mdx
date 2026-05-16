@@ -1,0 +1,124 @@
+---
+title: Plugin Development
+description: Learn the official way to build HaloForge plugins with the Rust API, TypeScript SDK, and plugin packager.
+---
+
+import { Card, CardGrid, Steps } from '@astrojs/starlight/components';
+
+HaloForge plugins add new modules, panels, slots, assistants, backend services, and workflow capabilities to the desktop app.
+
+The important rule is simple: **build against the public plugin API and SDK, not against HaloForge internals.** A plugin should continue to work when HaloForge switches between Community Cloud, Enterprise Server, or a future desktop runtime.
+
+<CardGrid>
+  <Card title="Start from a template" icon="puzzle">
+    Use the Level 0 Rust + React template when building a full module plugin.
+  </Card>
+  <Card title="Use public SDK hooks" icon="setting">
+    Read host state, theme tokens, AI transport, file dialogs, and managed services through `@haloforge/plugin-sdk`.
+  </Card>
+  <Card title="Package consistently" icon="rocket">
+    Validate and package with `@haloforge/plugin-pack`, then install locally with `hf plugin install local`.
+  </Card>
+</CardGrid>
+
+## Plugin Shapes
+
+| Level | Surface | Typical use |
+| --- | --- | --- |
+| 0 | Top-level module | A full workspace such as Image Studio or Switchboard |
+| 1 | Feature panel inside a module | A Git tab inside DevKit |
+| 2 | UI slot injection | Toolbar buttons or message actions |
+| 3 | Assistant registration | A named AI assistant with its own prompt and optional UI |
+| 4 | Headless backend service | Workflow step types, native tool integration, or plugin-to-plugin services |
+
+Choose the smallest level that matches the product surface. A plugin that only adds one toolbar action should not register a full module.
+
+## Recommended Layout
+
+```text
+my-plugin/
+  manifest.json
+  backend/
+    Cargo.toml
+    src/lib.rs
+  app/
+    package.json
+    src/index.tsx
+    src/Panel.tsx
+    src/styles.css
+  assets/
+  dist/
+```
+
+The official template lives in [`haloforge-plugin-api/templates/level0-rust-react`](https://github.com/HaloForgeAI/haloforge-plugin-api/tree/main/templates/level0-rust-react).
+
+## Quick Start
+
+<Steps>
+  1. Copy the Level 0 template.
+
+     ```bash
+     cp -R /path/to/haloforge-plugin-api/templates/level0-rust-react my-plugin
+     ```
+
+  2. Rename the plugin ID, package names, crate names, module label, and command names.
+
+  3. Build the frontend and backend.
+
+     ```bash
+     cd app
+     npm install
+     npm run typecheck
+     npm run build
+
+     cd ../backend
+     cargo check
+     ```
+
+  4. Validate and package.
+
+     ```bash
+     cd ..
+     npx @haloforge/plugin-pack check .
+     npx @haloforge/plugin-pack pack . --out dist/package
+     ```
+
+  5. Install locally.
+
+     ```bash
+     cd /path/to/HaloForge
+     npm run hf -- plugin install local /path/to/my-plugin/dist/package/dev.example.my-plugin-0.1.0.hfpkg --json
+     ```
+</Steps>
+
+## Design Principles
+
+- Use `@haloforge/plugin-sdk` for all host integration.
+- Use `haloforge-plugin-api` for Rust backend code.
+- Use `@haloforge/plugin-pack` for validation and packaging.
+- Keep permissions minimal and explicit.
+- Keep CSS scoped under a plugin root class.
+- Use HaloForge theme tokens instead of hard-coded palettes.
+- Use SDK controls such as `AppSelect` instead of raw controls when the SDK has a matching component.
+- Ship English and Chinese strings for official user-facing plugins.
+- Provide a Community Edition path for features that can work without Enterprise Server.
+
+## What Not To Do
+
+Do not:
+
+- read `window.__HF_HOST`
+- depend on private host stores
+- hand-write `plugin_invoke` wire command names
+- call private Tauri commands when an SDK helper exists
+- style `body`, `html`, or global selectors from plugin CSS
+- present a Community Edition user with enterprise-only labels for a feature that can work locally
+
+## Next Pages
+
+- [Manifest](./manifest/)
+- [Rust Backend](./rust-backend/)
+- [Frontend SDK](./frontend-sdk/)
+- [UI and i18n](./ui-i18n/)
+- [Managed Image Gateway](./managed-image-gateway/)
+- [Testing and Debugging](./testing/)

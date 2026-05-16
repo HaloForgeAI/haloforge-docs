@@ -1,0 +1,22 @@
+---
+title: 仓库边界
+description: 理解 HaloForge 每个仓库负责的产品面。
+---
+
+HaloForge 按部署和所有权边界拆分仓库。
+
+| Repository | 职责 |
+| --- | --- |
+| [`HaloForge`](https://github.com/HaloForgeAI/HaloForge) | 桌面端、Tauri runtime、本地插件加载器、本地 UI shell |
+| [`haloforge-plugin-api`](https://github.com/HaloForgeAI/haloforge-plugin-api) | Rust 插件 API、TypeScript SDK、packager、模板、插件 skill |
+| [`haloforge-docs`](https://github.com/HaloForgeAI/haloforge-docs) | 公开文档站 |
+| [`HaloForge-Community-Cloud`](https://github.com/HaloForgeAI/HaloForge-Community-Cloud) | 公开 API、admin、homepage、status、Cloudflare 部署 |
+| [`HaloForge-Enterprise-Server`](https://github.com/HaloForgeAI/HaloForge-Enterprise-Server) | 企业 API、admin、私有 catalog、knowledge、部署 |
+
+## 判断规则
+
+- 桌面端 runtime 改动属于 `HaloForge`。
+- 插件开发契约属于 `haloforge-plugin-api`。
+- 公开文档属于 `haloforge-docs`。
+- 社区云服务端行为属于 `HaloForge-Community-Cloud`。
+- 企业服务端行为属于 `HaloForge-Enterprise-Server`。

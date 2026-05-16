@@ -1,0 +1,44 @@
+---
+title: HaloForge 文档
+description: 使用官方 Plugin API、SDK 和打包工具开发、发布、运营 HaloForge 扩展。
+template: splash
+hero:
+  tagline: 面向 HaloForge 插件、SDK、发布流程和平台集成的开发者文档。
+  image:
+    file: ../../../assets/haloforge-mark.svg
+  actions:
+    - text: 开始开发插件
+      link: /zh/plugins/
+      icon: right-arrow
+      variant: primary
+    - text: 查看 SDK
+      link: /zh/sdk/
+      icon: document
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## 本站内容
+
+<CardGrid>
+  <Card title="插件开发" icon="puzzle">
+    使用公开插件契约开发 Level 0 顶级模块、功能页、UI slot、assistant 和后端服务。
+  </Card>
+  <Card title="SDK 与 Host API" icon="setting">
+    使用文档化 React hooks、宿主控件、文件选择器、AI transport 和托管生图网关，不依赖私有 host bridge。
+  </Card>
+  <Card title="发布流程" icon="rocket">
+    使用官方插件同一套流程完成打包、签名、提交、审核和上架。
+  </Card>
+</CardGrid>
+
+## 主要仓库
+
+- [`HaloForgeAI/HaloForge`](https://github.com/HaloForgeAI/HaloForge)：桌面端 runtime、插件加载器和本地应用外壳。
+- [`HaloForgeAI/haloforge-plugin-api`](https://github.com/HaloForgeAI/haloforge-plugin-api)：Rust API crate、TypeScript SDK、packager、模板和插件开发 skill。
+- [`HaloForgeAI/HaloForge-Community-Cloud`](https://github.com/HaloForgeAI/HaloForge-Community-Cloud)：公开 Cloudflare Workers 与 Pages 部署面。
+- [`HaloForgeAI/HaloForge-Enterprise-Server`](https://github.com/HaloForgeAI/HaloForge-Enterprise-Server)：企业版部署和私有控制面代码。
+
+## 当前重点
+
+第一批完整文档块是插件开发。后续应继续补桌面端 runtime 开发、catalog 发布、企业服务端集成和 HaloCode runtime 打包。

@@ -1,0 +1,75 @@
+---
+title: Manifest
+description: 定义插件身份、兼容性、入口、host capabilities、权限和命令。
+---
+
+每个插件根目录都需要 `manifest.json`。它会用于安装、权限审核、打包、运行时加载和 catalog 发布。
+
+## Level 0 示例
+
+```json
+{
+  "id": "dev.example.my-plugin",
+  "name": "My Plugin",
+  "version": "0.1.0",
+  "description": "Short user-facing summary.",
+  "author": "Example",
+  "compatibility": {
+    "min_app_version": "0.1.0",
+    "min_host_api_version": "0.2.4"
+  },
+  "capability_levels": [0],
+  "host_capabilities": ["theme_read"],
+  "integration": {
+    "level0": {
+      "module_id": "my-plugin",
+      "module_label": "My Plugin",
+      "module_icon": "Sparkles",
+      "sidebar_position": "main",
+      "sidebar_order": 120,
+      "panel_entry": "app/dist/index.js"
+    }
+  },
+  "entry": {
+    "native": {
+      "macos_arm64": "backend/target/release/libmy_plugin.dylib",
+      "windows_x64": "backend/target/release/my_plugin.dll",
+      "linux_x64": "backend/target/release/libmy_plugin.so"
+    },
+    "frontend": "app/dist/index.js",
+    "frontend_styles": "app/dist/styles.css"
+  },
+  "permissions": [
+    { "type": "ipc_register" },
+    { "type": "host_theme_read" }
+  ],
+  "commands": [
+    { "id": "ping", "description": "Return plugin health information." }
+  ]
+}
+```
+
+## 规则
+
+- `id` 发布后必须保持稳定。
+- `version` 使用 semver，官方插件初版从 `0.1.0` 开始。
+- `host_capabilities` 必须匹配前端实际使用的 SDK helper。
+- `permissions` 必须是最小权限集合。
+- `entry.frontend` 指向构建后的 JS bundle。
+- `entry.frontend_styles` 指向构建后的样式文件。
+- `commands[].id` 和 Rust 后端注册的命令名一致，不包含 SDK 自动前缀。
+
+## 常见 Host Capabilities
+
+| Capability | SDK |
+| --- | --- |
+| `navigation` | `useHostNavigation()` |
+| `app_state` | `useHostAppState()` |
+| `file_intents` | `useHostFileIntent()` |
+| `file_dialogs` | `pickHostFile()` / `pickHostDirectory()` / `saveHostFile()` |
+| `aichat` | `useHostAI()` |
+| `enterprise_gateway` | `enterpriseGateway()` |
+| `theme_read` | `useHostTheme()` / `useAppTheme()` |
+| `event_subscribe` | `useHostEvent()` |
+
+`enterprise_gateway` 是托管生图网关的历史 capability 名称。产品 UI 应显示为 “HaloForge Cloud gateway” 或 “Managed gateway”，不要在社区版界面显示 “Enterprise gateway”。

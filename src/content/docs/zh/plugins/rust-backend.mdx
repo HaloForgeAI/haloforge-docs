@@ -1,0 +1,85 @@
+---
+title: Rust 后端
+description: 使用 haloforge-plugin-api 实现原生插件命令。
+---
+
+插件需要文件系统、绕开浏览器 CORS 的外部 HTTP、密钥处理、本地进程、长任务或高权限宿主操作时，应使用 Rust 后端。
+
+纯前端插件适合简单 UI 或只消费公开 SDK hooks 的面板。
+
+## Cargo 配置
+
+```toml
+[package]
+name = "hf-my-plugin"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+haloforge-plugin-api = "0.2.4"
+serde_json = "1"
+```
+
+## 最小后端
+
+```rust
+use haloforge_plugin_api::*;
+
+pub struct MyPlugin;
+
+impl MyPlugin {
+    pub fn new() -> Self {
+        Self
+    }
+}
+
+impl HaloForgePlugin for MyPlugin {
+    fn metadata(&self) -> PluginMetadata {
+        PluginMetadata {
+            id: "dev.example.my-plugin".into(),
+            name: "My Plugin".into(),
+            version: "0.1.0".into(),
+            description: "A sample HaloForge plugin".into(),
+            author: "Example".into(),
+            abi_version: PLUGIN_ABI_VERSION,
+        }
+    }
+
+    fn on_load(
+        &mut self,
+        _ctx: &dyn PluginContext,
+        ipc: &mut dyn IpcRegistrar,
+    ) -> Result<(), PluginError> {
+        ipc.register("ping", Box::new(|args, _ctx| {
+            Ok(serde_json::json!({
+                "ok": true,
+                "echo": args
+            }))
+        }))?;
+        Ok(())
+    }
+}
+
+declare_plugin!(MyPlugin, MyPlugin::new);
+```
+
+## 命令命名
+
+Rust 注册短命令名：
+
+```rust
+ipc.register("ping", Box::new(|args, _ctx| {
+    Ok(serde_json::json!({ "ok": true, "echo": args }))
+}))?;
+```
+
+前端调用：
+
+```ts
+await invokePlugin("ping", { value: 1 });
+```
+
+不要手写最终 wire name，SDK 会按当前 plugin ID 自动加前缀。

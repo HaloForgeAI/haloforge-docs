@@ -1,0 +1,88 @@
+---
+title: Manifest
+description: Define plugin identity, compatibility, entries, host capabilities, permissions, and registered commands.
+---
+
+Every plugin ships a `manifest.json` at the repository root. The manifest is used during install, permission review, packaging, runtime loading, and catalog publication.
+
+## Minimal Level 0 Manifest
+
+```json
+{
+  "id": "dev.example.my-plugin",
+  "name": "My Plugin",
+  "version": "0.1.0",
+  "description": "Short user-facing summary.",
+  "author": "Example",
+  "compatibility": {
+    "min_app_version": "0.1.0",
+    "min_host_api_version": "0.2.4"
+  },
+  "capability_levels": [0],
+  "host_capabilities": ["theme_read"],
+  "integration": {
+    "level0": {
+      "module_id": "my-plugin",
+      "module_label": "My Plugin",
+      "module_icon": "Sparkles",
+      "sidebar_position": "main",
+      "sidebar_order": 120,
+      "panel_entry": "app/dist/index.js"
+    }
+  },
+  "entry": {
+    "native": {
+      "macos_arm64": "backend/target/release/libmy_plugin.dylib",
+      "windows_x64": "backend/target/release/my_plugin.dll",
+      "linux_x64": "backend/target/release/libmy_plugin.so"
+    },
+    "frontend": "app/dist/index.js",
+    "frontend_styles": "app/dist/styles.css"
+  },
+  "permissions": [
+    { "type": "ipc_register" },
+    { "type": "host_theme_read" }
+  ],
+  "commands": [
+    { "id": "ping", "description": "Return plugin health information." }
+  ]
+}
+```
+
+## Rules
+
+- `id` is stable forever after publication.
+- `version` uses semver. Official plugins should start at `0.1.0`.
+- `host_capabilities` must match the SDK helpers the frontend consumes.
+- `permissions` must be the smallest set needed for the feature.
+- `entry.frontend` points to the built JavaScript bundle.
+- `entry.frontend_styles` points to the built stylesheet when the plugin emits CSS.
+- `integration.*.panel_entry` should point to the panel bundle used by the integration.
+- `commands[].id` matches Rust backend command names before SDK prefixing.
+
+## Common Host Capabilities
+
+| Capability | SDK surface |
+| --- | --- |
+| `navigation` | `useHostNavigation()` |
+| `app_state` | `useHostAppState()` |
+| `file_intents` | `useHostFileIntent()` |
+| `file_dialogs` | `pickHostFile()`, `pickHostDirectory()`, `saveHostFile()` |
+| `aichat` | `useHostAI()` |
+| `enterprise_gateway` | `enterpriseGateway()` |
+| `theme_read` | `useHostTheme()`, `useAppTheme()` |
+| `event_subscribe` | `useHostEvent()` |
+
+`enterprise_gateway` is the historical capability name for the host-managed image gateway. User-facing UI should say "HaloForge Cloud gateway" or "Managed gateway" unless the screen is explicitly enterprise-only.
+
+## Permission Naming
+
+Permission names are strict. For example, AIChat access is `host_aichat_access`, not `host_a_i_chat_access`.
+
+Managed image gateway access uses:
+
+```json
+{ "type": "host_enterprise_gateway_access" }
+```
+
+The permission name is retained for compatibility. Product language should remain neutral.

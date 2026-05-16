@@ -1,0 +1,96 @@
+---
+title: Rust Backend
+description: Implement native plugin commands with haloforge-plugin-api.
+---
+
+Use a Rust backend when a plugin needs native filesystem access, outbound HTTP without browser CORS, secret handling, local process integration, long-running work, or privileged host operations.
+
+Frontend-only plugins are acceptable for pure UI surfaces and simple panels that only consume public SDK hooks.
+
+## Cargo Setup
+
+```toml
+[package]
+name = "hf-my-plugin"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+haloforge-plugin-api = "0.2.4"
+serde_json = "1"
+```
+
+## Minimal Backend
+
+```rust
+use haloforge_plugin_api::*;
+
+pub struct MyPlugin;
+
+impl MyPlugin {
+    pub fn new() -> Self {
+        Self
+    }
+}
+
+impl HaloForgePlugin for MyPlugin {
+    fn metadata(&self) -> PluginMetadata {
+        PluginMetadata {
+            id: "dev.example.my-plugin".into(),
+            name: "My Plugin".into(),
+            version: "0.1.0".into(),
+            description: "A sample HaloForge plugin".into(),
+            author: "Example".into(),
+            abi_version: PLUGIN_ABI_VERSION,
+        }
+    }
+
+    fn on_load(
+        &mut self,
+        _ctx: &dyn PluginContext,
+        ipc: &mut dyn IpcRegistrar,
+    ) -> Result<(), PluginError> {
+        ipc.register("ping", Box::new(|args, _ctx| {
+            Ok(serde_json::json!({
+                "ok": true,
+                "echo": args
+            }))
+        }))?;
+        Ok(())
+    }
+}
+
+declare_plugin!(MyPlugin, MyPlugin::new);
+```
+
+## Command Naming
+
+Register short command names in Rust:
+
+```rust
+ipc.register("ping", Box::new(|args, _ctx| {
+    Ok(serde_json::json!({ "ok": true, "echo": args }))
+}))?;
+```
+
+Then call them from the frontend with:
+
+```ts
+await invokePlugin("ping", { value: 1 });
+```
+
+Do not construct the final wire name manually. The SDK prefixes the command for the current plugin.
+
+## External HTTP
+
+When a plugin calls a user-configured API endpoint, prefer the Rust backend if:
+
+- the browser would hit CORS
+- an API key should not sit in frontend component state longer than needed
+- request signing is required
+- retries, timeouts, and response normalization matter
+
+Declare `network_http` or a scoped `network_http_domain` permission when needed.
