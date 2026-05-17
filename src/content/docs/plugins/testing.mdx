@@ -32,6 +32,22 @@ The installed plugin should show:
 
 See [Command Line](/platform/cli/) for launch profile and catalog admin commands.
 
+## Runtime Logs
+
+HaloForge writes application, frontend bridge, and plugin logs to a daily file:
+
+```bash
+tail -f ~/.haloforge/logs/haloforge.log.$(date +%F)
+```
+
+In development, raise Rust tracing with:
+
+```bash
+RUST_LOG=debug npm run tauri dev
+```
+
+Frontend plugins should use `createPluginLogger()` from `@haloforge/plugin-sdk`; Rust backends should use `ctx.log(...)`. For image generation and other gateway flows, log request start, success, and failure with request ID, model, size, status, elapsed time, output count, and a short error summary. Do not log API keys, bearer tokens, full prompts, or raw image/base64 payloads.
+
 ## Package Inspection
 
 Inspect a package before installing:

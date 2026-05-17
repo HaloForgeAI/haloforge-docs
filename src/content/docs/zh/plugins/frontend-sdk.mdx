@@ -29,6 +29,7 @@ export default registerPlugin("dev.example.my-plugin", definePlugin({
 | `useHostTheme()` | 读取宿主主题和 token |
 | `useHostAI()` | 复用 AIChat 模型和 transport |
 | `AppSelect` | 渲染 HaloForge 风格下拉控件 |
+| `log()` / `createPluginLogger()` | 将插件诊断写入 HaloForge 应用日志 |
 
 ## 调用 Rust 命令
 
@@ -44,6 +45,30 @@ export async function ping() {
   return invokePlugin<PingResult>("ping", { source: "panel" });
 }
 ```
+
+## 日志
+
+需要在 HaloForge 诊断日志中保留下来的前端事件，使用 `createPluginLogger()`，不要只依赖 DevTools 里的 `console.log`。
+
+```tsx
+import { createPluginLogger } from "@haloforge/plugin-sdk";
+
+const logger = createPluginLogger("image-generation");
+
+await logger.info("Generation started", {
+  model: "gpt-image-2.0",
+  size: "1024x1024",
+  count: 1,
+});
+
+await logger.error("Generation failed", {
+  status: 502,
+  elapsedMs: 1842,
+  error: "upstream gateway timeout",
+});
+```
+
+HaloForge 会写入 `~/.haloforge/logs/haloforge.log.YYYY-MM-DD`。`details` 保持 JSON 可序列化，不要写入 API key、bearer token、完整 prompt 或原始图片/base64。
 
 ## AppSelect
 

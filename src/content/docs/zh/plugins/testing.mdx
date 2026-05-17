@@ -32,6 +32,22 @@ npm run hf -- plugin list --json
 
 启动配置和 catalog admin 命令见[命令行](/zh/platform/cli/)。
 
+## 运行日志
+
+HaloForge 会把应用、前端桥接和插件日志写入按天滚动的文件：
+
+```bash
+tail -f ~/.haloforge/logs/haloforge.log.$(date +%F)
+```
+
+开发时可以提高 Rust tracing 级别：
+
+```bash
+RUST_LOG=debug npm run tauri dev
+```
+
+前端插件使用 `@haloforge/plugin-sdk` 的 `createPluginLogger()`；Rust 后端使用 `ctx.log(...)`。生图和其他网关流程应记录请求开始、成功、失败，并包含 request ID、模型、尺寸、状态、耗时、输出数量和短错误摘要。不要记录 API key、bearer token、完整 prompt 或原始图片/base64。
+
 ## 检查包内容
 
 ```bash

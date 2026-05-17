@@ -52,3 +52,13 @@ const result = await gateway.generateImages({
 - 默认模型和尺寸
 
 OpenAI-compatible 端点如果涉及 CORS 或密钥处理，建议通过 Rust 后端请求，并声明 `network_http`。
+
+## 日志
+
+生图插件两条网关路径都应输出诊断日志：
+
+- 托管网关的前端调用使用 `@haloforge/plugin-sdk` 的 `createPluginLogger()`。
+- 自定义端点的 Rust 后端调用使用 `ctx.log(...)`。
+- 记录 `started`、`succeeded`、`failed` 事件，并包含 request ID、网关类型、操作类型、模型、尺寸、数量、状态、耗时、输出数量和短错误摘要。
+
+不要记录 Cloud session token、用户 API key、bearer token、完整 prompt、上传图片字节、mask 或 base64 payload。HaloForge 最终会写入 `~/.haloforge/logs/haloforge.log.YYYY-MM-DD`。

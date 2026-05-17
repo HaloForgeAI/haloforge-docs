@@ -39,6 +39,16 @@ npm run hf -- plugin install official markdown --json
 npm run hf -- plugin install official git p4 aireplay --json
 ```
 
+## 插件测试时查看日志
+
+`hf` 负责安装和检查本地插件包；运行时日志仍由 HaloForge 应用统一写入：
+
+```bash
+tail -f ~/.haloforge/logs/haloforge.log.$(date +%F)
+```
+
+测试生图或其他网关插件时，建议一个终端运行 `hf plugin list --json`，另一个终端跟随当天日志文件。前端插件通过 `createPluginLogger()` 写入的日志和 Rust 后端通过 `ctx.log(...)` 写入的日志会出现在同一条日志流里。
+
 ## 启动配置命令
 
 使用桌面端里创建的 launch profile：

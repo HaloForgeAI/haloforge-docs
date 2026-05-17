@@ -83,3 +83,22 @@ await invokePlugin("ping", { value: 1 });
 ```
 
 不要手写最终 wire name，SDK 会按当前 plugin ID 自动加前缀。
+
+## 外部 HTTP
+
+插件调用用户配置的 API 端点时，如果涉及浏览器 CORS、API key、请求签名、重试、超时或响应归一化，优先通过 Rust 后端请求。
+
+需要外部网络访问时，在 manifest 中声明 `network_http` 或更窄的 `network_http_domain` 权限。
+
+## 日志
+
+Rust 后端应使用 `PluginContext` 提供的日志入口记录运行诊断：
+
+```rust
+ctx.log(LogLevel::Info, "image request started request_id=hfis-123 model=gpt-image-2.0 size=1024x1024");
+ctx.log(LogLevel::Error, "image request failed request_id=hfis-123 status=502 elapsed_ms=1842");
+```
+
+这些记录会写入 HaloForge 应用日志：`~/.haloforge/logs/haloforge.log.YYYY-MM-DD`。生命周期、开始和成功事件使用 `Info`；可恢复降级使用 `Warn`；用户操作失败使用 `Error`。`Debug` 和 `Trace` 需要应用以对应 `RUST_LOG` 启动。
+
+不要记录 API key、bearer token、完整 prompt、文件内容、原始图片字节或 base64 payload。优先记录 request ID、端点类型、模型、尺寸、状态、耗时和输出数量。

@@ -39,6 +39,16 @@ npm run hf -- plugin install official markdown --json
 npm run hf -- plugin install official git p4 aireplay --json
 ```
 
+## Logs During Plugin Tests
+
+`hf` installs and inspects local plugin packages. Runtime logs are still written by the HaloForge app:
+
+```bash
+tail -f ~/.haloforge/logs/haloforge.log.$(date +%F)
+```
+
+When testing image generation or other gateway plugins, keep one terminal on `hf plugin list --json` and another on the daily log file. Frontend plugin logs written through `createPluginLogger()` and Rust backend logs written through `ctx.log(...)` appear in the same stream.
+
 ## Launch Commands
 
 Use launch profiles created in the HaloForge desktop UI:

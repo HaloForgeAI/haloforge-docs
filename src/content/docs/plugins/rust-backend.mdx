@@ -94,3 +94,16 @@ When a plugin calls a user-configured API endpoint, prefer the Rust backend if:
 - retries, timeouts, and response normalization matter
 
 Declare `network_http` or a scoped `network_http_domain` permission when needed.
+
+## Logging
+
+Rust backends should use the `PluginContext` logger for operational diagnostics:
+
+```rust
+ctx.log(LogLevel::Info, "image request started request_id=hfis-123 model=gpt-image-2.0 size=1024x1024");
+ctx.log(LogLevel::Error, "image request failed request_id=hfis-123 status=502 elapsed_ms=1842");
+```
+
+These records are written to the HaloForge app log at `~/.haloforge/logs/haloforge.log.YYYY-MM-DD`. Use `Info` for lifecycle/start/success records, `Warn` for recoverable degradation, and `Error` for failed user actions. `Debug` and `Trace` are available when the app is launched with a matching `RUST_LOG`.
+
+Do not log API keys, bearer tokens, full prompts, file contents, raw image bytes, or base64 payloads. Prefer request IDs, endpoint kind, model, size, status, elapsed time, and output counts.

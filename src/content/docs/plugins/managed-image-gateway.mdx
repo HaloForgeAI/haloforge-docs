@@ -53,6 +53,16 @@ For Community Edition, expose settings such as:
 
 For OpenAI-compatible endpoints, route requests through Rust if CORS or key handling matters. Declare `network_http` when the backend performs outbound HTTP.
 
+## Logging
+
+Image generation plugins should emit diagnostics for both gateway paths:
+
+- Frontend managed-gateway calls use `createPluginLogger()` from `@haloforge/plugin-sdk`.
+- Rust custom-endpoint calls use `ctx.log(...)`.
+- Log `started`, `succeeded`, and `failed` events with request ID, gateway type, operation, model, size, count, status, elapsed time, output count, and a short error summary.
+
+Do not log Cloud session tokens, user API keys, bearer tokens, full prompts, uploaded image bytes, masks, or base64 payloads. HaloForge writes the final records to `~/.haloforge/logs/haloforge.log.YYYY-MM-DD`.
+
 ## UI Labels
 
 Use these labels:

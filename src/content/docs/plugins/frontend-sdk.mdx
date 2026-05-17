@@ -29,6 +29,7 @@ export default registerPlugin("dev.example.my-plugin", definePlugin({
 | `useHostTheme()` | Read active host theme and tokens |
 | `useHostAI()` | Reuse AIChat model and transport integration |
 | `AppSelect` | Render HaloForge-styled dropdown/listbox controls |
+| `log()` / `createPluginLogger()` | Write plugin diagnostics into the HaloForge app log |
 
 ## Calling Rust Commands
 
@@ -44,6 +45,30 @@ export async function ping() {
   return invokePlugin<PingResult>("ping", { source: "panel" });
 }
 ```
+
+## Logging
+
+Use `createPluginLogger()` for frontend events that should be visible in HaloForge diagnostics, not only in browser DevTools.
+
+```tsx
+import { createPluginLogger } from "@haloforge/plugin-sdk";
+
+const logger = createPluginLogger("image-generation");
+
+await logger.info("Generation started", {
+  model: "gpt-image-2.0",
+  size: "1024x1024",
+  count: 1,
+});
+
+await logger.error("Generation failed", {
+  status: 502,
+  elapsedMs: 1842,
+  error: "upstream gateway timeout",
+});
+```
+
+HaloForge writes these records to `~/.haloforge/logs/haloforge.log.YYYY-MM-DD`. Keep `details` JSON-serializable and do not include API keys, bearer tokens, full prompts, or raw image/base64 payloads.
 
 ## Host-Styled Select
 
