@@ -16,6 +16,8 @@ npx @haloforge/plugin-pack pack . --out dist/package
 
 ## Local Install
 
+`hf` operates on the local HaloForge workspace. In source checkout examples use `npm run hf -- ...`; installed Windows builds can use `hf ...` directly after opening a new terminal. On macOS, run `command -v hf` first because automatic PATH linking is not implemented yet.
+
 ```bash
 cd /path/to/HaloForge
 npm run hf -- plugin install local /path/to/plugin/dist/package/<plugin-id>-<version>.hfpkg --json
@@ -27,6 +29,8 @@ The installed plugin should show:
 - `enabled: true`
 - `state: "active"`
 - `error_message: null`
+
+See [Command Line](/platform/cli/) for launch profile and catalog admin commands.
 
 ## Package Inspection
 

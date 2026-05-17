@@ -1,0 +1,82 @@
+---
+title: Command Line
+description: Use the local hf command to manage plugins, launch profiles, and catalog operations.
+---
+
+HaloForge includes a local command line tool named `hf`. It talks to the same local workspace database as the desktop app, so it is useful for plugin testing, automation, and release follow-through.
+
+## Availability
+
+During source development, run it through the HaloForge desktop repository:
+
+```bash
+cd /path/to/HaloForge
+npm run hf -- --help
+```
+
+Installed builds are platform-dependent:
+
+| Platform | Status |
+| --- | --- |
+| Windows | NSIS/MSI installers add the HaloForge install directory to PATH. Open a new terminal after installing or updating, then run `hf --help`. |
+| macOS | Automatic PATH linking is not implemented yet. Run `command -v hf` first; if nothing is printed, use the source command above or manually point to a locally built `hf` binary. |
+
+In examples, `npm run hf -- ...` can be shortened to `hf ...` when `hf` is available on PATH.
+
+## Plugin Commands
+
+Install a local plugin package and verify its state:
+
+```bash
+npm run hf -- plugin install local /path/to/plugin/dist/package/<plugin-id>-<version>.hfpkg --json
+npm run hf -- plugin list --json
+```
+
+Install official plugins from the public catalog:
+
+```bash
+npm run hf -- plugin install official markdown --json
+npm run hf -- plugin install official git p4 aireplay --json
+```
+
+## Launch Commands
+
+Use launch profiles created in the HaloForge desktop UI:
+
+```bash
+npm run hf -- launch list --json
+npm run hf -- launch show "My Profile" --json
+npm run hf -- launch run "My Profile" --json
+npm run hf -- launch run "My Profile" --server local --json
+```
+
+## Catalog Admin Commands
+
+Admin commands are for catalog operators:
+
+```bash
+npm run hf -- admin me
+npm run hf -- admin catalog list --kind plugin --status published
+npm run hf -- admin catalog item get dev.haloforge.markdown
+npm run hf -- admin catalog version review dev.haloforge.markdown@0.2.2 approved --notes "Validated package and metadata."
+npm run hf -- admin catalog version publish dev.haloforge.markdown@0.2.2
+```
+
+## `hf` vs. `hf-pack`
+
+| Tool | Use it for |
+| --- | --- |
+| `hf` | Operating the local HaloForge workspace: install local packages, list plugins, run launch profiles, and perform catalog admin actions. |
+| `@haloforge/plugin-pack` / `hf-pack` | Authoring plugin packages: validate manifests, build `.hfpkg` archives, generate catalog metadata, and submit drafts. |
+
+A normal plugin test flow uses both:
+
+```bash
+cd /path/to/plugin
+npx --yes @haloforge/plugin-pack@0.2.5 check .
+npx --yes @haloforge/plugin-pack@0.2.5 pack . --out dist/package
+
+cd /path/to/HaloForge
+npm run hf -- plugin install local /path/to/plugin/dist/package/<plugin-id>-<version>.hfpkg --json
+npm run hf -- plugin list --json
+```

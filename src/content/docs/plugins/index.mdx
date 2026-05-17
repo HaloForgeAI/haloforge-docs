@@ -17,7 +17,7 @@ The important rule is simple: **build against the public plugin API and SDK, not
     Read host state, theme tokens, AI transport, file dialogs, and managed services through `@haloforge/plugin-sdk`.
   </Card>
   <Card title="Package consistently" icon="rocket">
-    Validate and package with `@haloforge/plugin-pack`, then install locally with `hf plugin install local`.
+    Validate and package with `@haloforge/plugin-pack`, then install locally with the [`hf` command](/platform/cli/).
   </Card>
 </CardGrid>
 
@@ -88,8 +88,11 @@ The official template lives in [`haloforge-plugin-api/templates/level0-rust-reac
      ```bash
      cd /path/to/HaloForge
      npm run hf -- plugin install local /path/to/my-plugin/dist/package/dev.example.my-plugin-0.1.0.hfpkg --json
+     npm run hf -- plugin list --json
      ```
 </Steps>
+
+`npm run hf -- ...` is the source-development form. On Windows installed builds, `hf` is added to PATH and the same command can be written as `hf plugin ...`. On macOS, run `command -v hf` first because automatic PATH linking is not implemented yet.
 
 ## Design Principles
 
@@ -122,3 +125,4 @@ Do not:
 - [UI and i18n](./ui-i18n/)
 - [Managed Image Gateway](./managed-image-gateway/)
 - [Testing and Debugging](./testing/)
+- [Command Line](/platform/cli/)

@@ -1,0 +1,82 @@
+---
+title: 命令行
+description: 使用本地 hf 命令管理插件、启动配置和 catalog 操作。
+---
+
+HaloForge 带有一个本地命令行工具：`hf`。它和桌面应用使用同一份本地 workspace 数据，所以很适合做插件测试、自动化和发布后的 catalog 操作。
+
+## 可用性
+
+源码开发时，从 HaloForge 桌面仓库运行：
+
+```bash
+cd /path/to/HaloForge
+npm run hf -- --help
+```
+
+安装版的可用性和平台有关：
+
+| 平台 | 当前状态 |
+| --- | --- |
+| Windows | NSIS/MSI 安装包会把 HaloForge 安装目录加入 PATH。安装或更新后重新打开终端，再运行 `hf --help`。 |
+| macOS | 当前还没有自动创建 PATH link。先运行 `command -v hf` 检查；如果没有输出，请使用上面的源码命令，或手动指向你自己构建出的 `hf` binary。 |
+
+文档里的 `npm run hf -- ...` 在 `hf` 已经进入 PATH 的环境里可以简化为 `hf ...`。
+
+## 插件命令
+
+安装本地插件包并确认状态：
+
+```bash
+npm run hf -- plugin install local /path/to/plugin/dist/package/<plugin-id>-<version>.hfpkg --json
+npm run hf -- plugin list --json
+```
+
+从公开 catalog 安装官方插件：
+
+```bash
+npm run hf -- plugin install official markdown --json
+npm run hf -- plugin install official git p4 aireplay --json
+```
+
+## 启动配置命令
+
+使用桌面端里创建的 launch profile：
+
+```bash
+npm run hf -- launch list --json
+npm run hf -- launch show "My Profile" --json
+npm run hf -- launch run "My Profile" --json
+npm run hf -- launch run "My Profile" --server local --json
+```
+
+## Catalog 管理命令
+
+Admin 命令面向 catalog 运营和发布人员：
+
+```bash
+npm run hf -- admin me
+npm run hf -- admin catalog list --kind plugin --status published
+npm run hf -- admin catalog item get dev.haloforge.markdown
+npm run hf -- admin catalog version review dev.haloforge.markdown@0.2.2 approved --notes "Validated package and metadata."
+npm run hf -- admin catalog version publish dev.haloforge.markdown@0.2.2
+```
+
+## `hf` 和 `hf-pack`
+
+| 工具 | 用途 |
+| --- | --- |
+| `hf` | 操作本地 HaloForge workspace：安装本地插件包、列出插件、运行启动配置、执行 catalog admin 操作。 |
+| `@haloforge/plugin-pack` / `hf-pack` | 插件打包工具：校验 manifest、构建 `.hfpkg`、生成 catalog metadata、提交草稿。 |
+
+普通插件测试流程会同时用到两者：
+
+```bash
+cd /path/to/plugin
+npx --yes @haloforge/plugin-pack@0.2.5 check .
+npx --yes @haloforge/plugin-pack@0.2.5 pack . --out dist/package
+
+cd /path/to/HaloForge
+npm run hf -- plugin install local /path/to/plugin/dist/package/<plugin-id>-<version>.hfpkg --json
+npm run hf -- plugin list --json
+```

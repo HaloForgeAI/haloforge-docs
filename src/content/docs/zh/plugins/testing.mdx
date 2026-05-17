@@ -16,6 +16,8 @@ npx @haloforge/plugin-pack pack . --out dist/package
 
 ## 本地安装
 
+`hf` 操作的是本地 HaloForge workspace。源码仓库示例使用 `npm run hf -- ...`；Windows 安装版重新打开终端后可以直接使用 `hf ...`。macOS 当前还没有自动 PATH link，请先运行 `command -v hf` 确认。
+
 ```bash
 cd /path/to/HaloForge
 npm run hf -- plugin install local /path/to/plugin/dist/package/<plugin-id>-<version>.hfpkg --json
@@ -27,6 +29,8 @@ npm run hf -- plugin list --json
 - `enabled: true`
 - `state: "active"`
 - `error_message: null`
+
+启动配置和 catalog admin 命令见[命令行](/zh/platform/cli/)。
 
 ## 检查包内容
 

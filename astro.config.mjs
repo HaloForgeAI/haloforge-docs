@@ -34,6 +34,7 @@ export default defineConfig({
           translations: { zh: "开始" },
           items: [
             { label: "Overview", link: "/" },
+            { label: "Command Line", link: "/platform/cli/" },
             { label: "Repository Map", link: "/platform/repositories/" },
           ],
         },

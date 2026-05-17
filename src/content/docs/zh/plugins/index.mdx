@@ -17,7 +17,7 @@ HaloForge 插件可以为桌面端增加新模块、功能页、UI slot、assist
     通过 `@haloforge/plugin-sdk` 读取宿主状态、主题 token、AI transport、文件选择器和托管服务能力。
   </Card>
   <Card title="统一打包" icon="rocket">
-    使用 `@haloforge/plugin-pack` 校验和打包，再用 `hf plugin install local` 本地安装。
+    使用 `@haloforge/plugin-pack` 校验和打包，再用 [`hf` 命令](/zh/platform/cli/)本地安装。
   </Card>
 </CardGrid>
 
@@ -88,8 +88,11 @@ my-plugin/
      ```bash
      cd /path/to/HaloForge
      npm run hf -- plugin install local /path/to/my-plugin/dist/package/dev.example.my-plugin-0.1.0.hfpkg --json
+     npm run hf -- plugin list --json
      ```
 </Steps>
+
+`npm run hf -- ...` 是源码开发环境的写法。Windows 安装版会把 `hf` 加到 PATH，重新打开终端后可以直接写 `hf plugin ...`。macOS 当前还没有自动 PATH link，使用前请先运行 `command -v hf` 确认。
 
 ## 开发原则
 
