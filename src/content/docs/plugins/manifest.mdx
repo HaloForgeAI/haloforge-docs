@@ -16,10 +16,10 @@ Every plugin ships a `manifest.json` at the repository root. The manifest is use
   "author": "Example",
   "compatibility": {
     "min_app_version": "0.1.0",
-    "min_host_api_version": "0.2.4"
+    "min_host_api_version": "0.2.10"
   },
   "capability_levels": [0],
-  "host_capabilities": ["theme_read"],
+  "host_capabilities": ["navigation", "file_intents", "theme_read"],
   "integration": {
     "level0": {
       "module_id": "my-plugin",
@@ -29,6 +29,22 @@ Every plugin ships a `manifest.json` at the repository root. The manifest is use
       "sidebar_order": 120,
       "panel_entry": "app/dist/index.js"
     }
+  },
+  "window": {
+    "preferred_role": "document",
+    "default_open_mode": "reuse_or_new",
+    "reuse_key": "resource",
+    "allow_multiple": true,
+    "document_handlers": [
+      {
+        "id": "markdown",
+        "label": "Markdown",
+        "extensions": [".md", ".markdown"],
+        "mime_types": ["text/markdown"],
+        "route": "/document",
+        "resource_param": "path"
+      }
+    ]
   },
   "entry": {
     "native": {
@@ -59,6 +75,32 @@ Every plugin ships a `manifest.json` at the repository root. The manifest is use
 - `entry.frontend_styles` points to the built stylesheet when the plugin emits CSS.
 - `integration.*.panel_entry` should point to the panel bundle used by the integration.
 - `commands[].id` matches Rust backend command names before SDK prefixing.
+
+## Window Policy
+
+Plugins can declare a `window` block when their routes or resources should participate in HaloForge's multi-window dispatcher.
+
+| Field | Meaning |
+| --- | --- |
+| `preferred_role` | Requested host role for new windows, such as `main`, `document`, `agent`, `chat`, `devkit`, or `settings`. |
+| `default_open_mode` | `smart`, `current`, `new_window`, `reuse_existing`, or `reuse_or_new`. |
+| `reuse_key` | `plugin`, `route`, `resource`, or `none`. |
+| `allow_multiple` | Whether the plugin can have multiple windows open at once. |
+| `document_handlers` | File/resource handlers that map extensions or MIME types into plugin routes. |
+
+The plugin declares intent; the host still owns actual window creation, focus, session restore, and conflict handling.
+
+`document_handlers` entries support:
+
+| Field | Meaning |
+| --- | --- |
+| `id` | Stable handler ID unique within the plugin. |
+| `label` | User-facing label for menus and open-with surfaces. |
+| `extensions` | Lowercase extensions including the dot, for example `.md`. |
+| `mime_types` | MIME types handled by this plugin. |
+| `route` | Plugin route opened for the resource. |
+| `resource_param` | Query parameter that receives the resource path or URI. Defaults to `path`. |
+| `open_mode`, `reuse_key`, `preferred_role`, `allow_multiple` | Handler-level overrides for the plugin window policy. |
 
 ## Common Host Capabilities
 
