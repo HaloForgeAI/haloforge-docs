@@ -16,7 +16,7 @@ Every plugin ships a `manifest.json` at the repository root. The manifest is use
   "author": "Example",
   "compatibility": {
     "min_app_version": "0.8.0",
-    "min_host_api_version": "0.2.10"
+    "min_host_api_version": "0.2.13"
   },
   "capability_levels": [0],
   "host_capabilities": ["navigation", "file_intents", "theme_read"],
@@ -31,7 +31,6 @@ Every plugin ships a `manifest.json` at the repository root. The manifest is use
     }
   },
   "window": {
-    "preferred_role": "document",
     "default_open_mode": "reuse_or_new",
     "reuse_key": "resource",
     "allow_multiple": true,
@@ -80,15 +79,16 @@ Every plugin ships a `manifest.json` at the repository root. The manifest is use
 
 Plugins can declare a `window` block when their routes or resources should participate in HaloForge's multi-window dispatcher.
 
+Multi-window policies require HaloForge `0.8.0` or newer and plugin host API `0.2.13` or newer. Keep `compatibility.min_app_version` and `compatibility.min_host_api_version` aligned with those requirements when publishing a plugin that declares `window`.
+
 | Field | Meaning |
 | --- | --- |
-| `preferred_role` | Requested host role for new windows, such as `main`, `document`, `agent`, `chat`, `devkit`, or `settings`. |
 | `default_open_mode` | `smart`, `current`, `new_window`, `reuse_existing`, or `reuse_or_new`. |
 | `reuse_key` | `plugin`, `route`, `resource`, or `none`. |
 | `allow_multiple` | Whether the plugin can have multiple windows open at once. |
 | `document_handlers` | File/resource handlers that map extensions or MIME types into plugin routes. |
 
-The plugin declares intent; the host still owns actual window creation, focus, session restore, and conflict handling.
+The plugin declares intent; the host still owns actual window creation, focus, session restore, snap-layout compatibility, and conflict handling.
 
 `document_handlers` entries support:
 
@@ -100,7 +100,7 @@ The plugin declares intent; the host still owns actual window creation, focus, s
 | `mime_types` | MIME types handled by this plugin. |
 | `route` | Plugin route opened for the resource. |
 | `resource_param` | Query parameter that receives the resource path or URI. Defaults to `path`. |
-| `open_mode`, `reuse_key`, `preferred_role`, `allow_multiple` | Handler-level overrides for the plugin window policy. |
+| `open_mode`, `reuse_key`, `allow_multiple` | Handler-level overrides for the plugin window policy. |
 
 ## Common Host Capabilities
 

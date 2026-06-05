@@ -22,6 +22,7 @@ npm i @haloforge/plugin-sdk react react-dom @tauri-apps/api lucide-react
 - 宿主事件
 - 插件内部路由历史
 - 插件 route/resource 多窗口打开
+- 用于系统窗口预览的当前窗口标题更新
 - `AppSelect` 等宿主风格控件
 - 托管生图网关
 
@@ -29,7 +30,7 @@ npm i @haloforge/plugin-sdk react react-dom @tauri-apps/api lucide-react
 
 | Manifest capability | SDK |
 | --- | --- |
-| `navigation` | `useHostNavigation()` / `usePluginNavigation()` / `usePluginWindows()` |
+| `navigation` | `useHostNavigation()` / `usePluginNavigation()` / `usePluginWindows()` / `usePluginWindowTitle()` |
 | `app_state` | `useHostAppState()` |
 | `file_intents` | `useHostFileIntent()` |
 | `file_dialogs` | `pickHostFile()` / `pickHostDirectory()` / `saveHostFile()` |
