@@ -28,6 +28,8 @@ export default registerPlugin("dev.example.my-plugin", definePlugin({
 | `usePluginSettings()` | 读取和更新插件设置 |
 | `useHostTheme()` | 读取宿主主题和 token |
 | `useHostAI()` | 复用 AIChat 模型和 transport |
+| `usePluginNavigation()` | 让 Level 0 插件内部页面接入 HaloForge 后退/前进 |
+| `usePluginWindows()` | 请求 HaloForge 通过多窗口分发器打开插件 route/resource |
 | `AppSelect` | 渲染 HaloForge 风格下拉控件 |
 | `log()` / `createPluginLogger()` | 将插件诊断写入 HaloForge 应用日志 |
 
@@ -69,6 +71,35 @@ await logger.error("Generation failed", {
 ```
 
 HaloForge 会写入 `~/.haloforge/logs/haloforge.log.YYYY-MM-DD`。`details` 保持 JSON 可序列化，不要写入 API key、bearer token、完整 prompt 或原始图片/base64。
+
+## 插件路由与窗口
+
+当前插件窗口内部页面变化使用 `usePluginNavigation()`。插件希望 HaloForge 把自己的 route 或 resource 打开到最合适的宿主窗口时，使用 `usePluginWindows()`。
+
+```tsx
+import { usePluginNavigation, usePluginWindows } from "@haloforge/plugin-sdk";
+
+export function DocumentsPanel() {
+  const navigation = usePluginNavigation();
+  const windows = usePluginWindows();
+
+  function openDetail(id: string) {
+    navigation.pushRoute(`/detail/${id}`, { params: { id } });
+  }
+
+  async function openDocument(path: string) {
+    await windows.openResource(path, {
+      route: "/document",
+      params: { path },
+      preferredRole: "document",
+      reuseKey: "resource",
+      openMode: "reuse_or_new",
+    });
+  }
+}
+```
+
+`usePluginWindows()` 会和插件 manifest 的 `window` 策略一起交给宿主分发。插件声明意图；窗口创建、聚焦、复用、恢复和安全检查仍由 HaloForge 控制。
 
 ## AppSelect
 

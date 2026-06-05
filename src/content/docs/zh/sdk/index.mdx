@@ -20,6 +20,8 @@ npm i @haloforge/plugin-sdk react react-dom @tauri-apps/api lucide-react
 - AIChat 模型和 transport
 - 宿主文件选择器
 - 宿主事件
+- 插件内部路由历史
+- 插件 route/resource 多窗口打开
 - `AppSelect` 等宿主风格控件
 - 托管生图网关
 
@@ -27,12 +29,13 @@ npm i @haloforge/plugin-sdk react react-dom @tauri-apps/api lucide-react
 
 | Manifest capability | SDK |
 | --- | --- |
-| `navigation` | `useHostNavigation()` |
+| `navigation` | `useHostNavigation()` / `usePluginNavigation()` / `usePluginWindows()` |
 | `app_state` | `useHostAppState()` |
 | `file_intents` | `useHostFileIntent()` |
 | `file_dialogs` | `pickHostFile()` / `pickHostDirectory()` / `saveHostFile()` |
 | `aichat` | `useHostAI()` |
 | `enterprise_gateway` | `enterpriseGateway()` |
+| `deep_links` | `onPluginDeepLink()` / `usePluginDeepLink()` |
 | `theme_read` | `useHostTheme()` |
 | `event_subscribe` | `useHostEvent()` |
 

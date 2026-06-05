@@ -20,6 +20,8 @@ Use it for:
 - AIChat model and transport access
 - host file dialogs
 - host events
+- plugin route history
+- plugin multi-window route/resource opening
 - host-styled controls such as `AppSelect`
 - managed image gateway access
 
@@ -27,12 +29,13 @@ Use it for:
 
 | Manifest capability | SDK surface |
 | --- | --- |
-| `navigation` | `useHostNavigation()` |
+| `navigation` | `useHostNavigation()`, `usePluginNavigation()`, `usePluginWindows()` |
 | `app_state` | `useHostAppState()` |
 | `file_intents` | `useHostFileIntent()` |
 | `file_dialogs` | `pickHostFile()`, `pickHostDirectory()`, `saveHostFile()` |
 | `aichat` | `useHostAI()` |
 | `enterprise_gateway` | `enterpriseGateway()` |
+| `deep_links` | `onPluginDeepLink()`, `usePluginDeepLink()` |
 | `theme_read` | `useHostTheme()` |
 | `event_subscribe` | `useHostEvent()` |
 

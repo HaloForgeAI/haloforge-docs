@@ -28,6 +28,8 @@ export default registerPlugin("dev.example.my-plugin", definePlugin({
 | `usePluginSettings()` | Read and update plugin settings |
 | `useHostTheme()` | Read active host theme and tokens |
 | `useHostAI()` | Reuse AIChat model and transport integration |
+| `usePluginNavigation()` | Sync Level 0 plugin pages with HaloForge Back/Forward |
+| `usePluginWindows()` | Ask HaloForge to open plugin routes/resources through the multi-window dispatcher |
 | `AppSelect` | Render HaloForge-styled dropdown/listbox controls |
 | `log()` / `createPluginLogger()` | Write plugin diagnostics into the HaloForge app log |
 
@@ -69,6 +71,35 @@ await logger.error("Generation failed", {
 ```
 
 HaloForge writes these records to `~/.haloforge/logs/haloforge.log.YYYY-MM-DD`. Keep `details` JSON-serializable and do not include API keys, bearer tokens, full prompts, or raw image/base64 payloads.
+
+## Plugin Routes And Windows
+
+Use `usePluginNavigation()` for page changes inside the current plugin window. Use `usePluginWindows()` when a plugin wants HaloForge to open one of its routes or resources in the best host window.
+
+```tsx
+import { usePluginNavigation, usePluginWindows } from "@haloforge/plugin-sdk";
+
+export function DocumentsPanel() {
+  const navigation = usePluginNavigation();
+  const windows = usePluginWindows();
+
+  function openDetail(id: string) {
+    navigation.pushRoute(`/detail/${id}`, { params: { id } });
+  }
+
+  async function openDocument(path: string) {
+    await windows.openResource(path, {
+      route: "/document",
+      params: { path },
+      preferredRole: "document",
+      reuseKey: "resource",
+      openMode: "reuse_or_new",
+    });
+  }
+}
+```
+
+`usePluginWindows()` combines the call with the plugin manifest `window` policy. The plugin declares intent; HaloForge owns window creation, focus, reuse, restore, and safety checks.
 
 ## Host-Styled Select
 
