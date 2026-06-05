@@ -30,6 +30,8 @@ export default registerPlugin("dev.example.my-plugin", definePlugin({
 | `useHostAI()` | Reuse AIChat model and transport integration |
 | `usePluginNavigation()` | Sync Level 0 plugin pages with HaloForge Back/Forward |
 | `usePluginWindows()` | Ask HaloForge to open plugin routes/resources through the multi-window dispatcher |
+| `pluginCurrentWindow()` / `usePluginCurrentWindow()` | Update or reset the active HaloForge window title |
+| `usePluginWindowTitle()` | Keep the native window preview title synced with the current plugin document |
 | `AppSelect` | Render HaloForge-styled dropdown/listbox controls |
 | `log()` / `createPluginLogger()` | Write plugin diagnostics into the HaloForge app log |
 
@@ -91,7 +93,6 @@ export function DocumentsPanel() {
     await windows.openResource(path, {
       route: "/document",
       params: { path },
-      preferredRole: "document",
       reuseKey: "resource",
       openMode: "reuse_or_new",
     });
@@ -100,6 +101,28 @@ export function DocumentsPanel() {
 ```
 
 `usePluginWindows()` combines the call with the plugin manifest `window` policy. The plugin declares intent; HaloForge owns window creation, focus, reuse, restore, and safety checks.
+
+## Native Window Title
+
+Plugins can update the native window title shown in the operating system window preview, such as the Windows taskbar thumbnail. Use this for document-oriented plugins that should show the active file name.
+
+```tsx
+import { usePluginWindowTitle } from "@haloforge/plugin-sdk";
+
+export function MarkdownPanel({ activeModule, document }) {
+  usePluginWindowTitle(
+    document?.name?.trim() || null,
+    {
+      subtitle: "Markdown",
+      enabled: activeModule === "markdown",
+    },
+  );
+
+  return <main>{document?.name ?? "No document"}</main>;
+}
+```
+
+HaloForge formats plugin titles as `Title - Subtitle - HaloForge` and resets the title when the owning panel unmounts or disables the hook. Hidden or background plugin panels cannot overwrite another plugin's active window title.
 
 ## Host-Styled Select
 

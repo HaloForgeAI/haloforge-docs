@@ -22,6 +22,7 @@ Use it for:
 - host events
 - plugin route history
 - plugin multi-window route/resource opening
+- current-window title updates for OS window previews
 - host-styled controls such as `AppSelect`
 - managed image gateway access
 
@@ -29,7 +30,7 @@ Use it for:
 
 | Manifest capability | SDK surface |
 | --- | --- |
-| `navigation` | `useHostNavigation()`, `usePluginNavigation()`, `usePluginWindows()` |
+| `navigation` | `useHostNavigation()`, `usePluginNavigation()`, `usePluginWindows()`, `usePluginWindowTitle()` |
 | `app_state` | `useHostAppState()` |
 | `file_intents` | `useHostFileIntent()` |
 | `file_dialogs` | `pickHostFile()`, `pickHostDirectory()`, `saveHostFile()` |

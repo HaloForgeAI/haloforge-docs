@@ -8,14 +8,14 @@ description: 打包、签名、提交、审核和发布 HaloForge 插件。
 ## 打包
 
 ```bash
-npx @haloforge/plugin-pack check .
-npx @haloforge/plugin-pack pack . --release --out dist/package
+npx --yes @haloforge/plugin-pack@0.2.13 check .
+npx --yes @haloforge/plugin-pack@0.2.13 pack . --release --out dist/package
 ```
 
 ## 生成 Catalog Metadata
 
 ```bash
-npx @haloforge/plugin-pack metadata dist/package/<plugin-id>-<version>.hfpkg \
+npx --yes @haloforge/plugin-pack@0.2.13 metadata dist/package/<plugin-id>-<version>.hfpkg \
   --signing-key-id haloforge-official-2026-05 \
   --signing-key-env HF_PLUGIN_SIGNING_PRIVATE_KEY \
   --pretty \
@@ -25,10 +25,11 @@ npx @haloforge/plugin-pack metadata dist/package/<plugin-id>-<version>.hfpkg \
 ## 提交
 
 ```bash
-npx @haloforge/plugin-pack submit dist/catalog-draft.json --token-env HF_ADMIN_TOKEN
+npx --yes @haloforge/plugin-pack@0.2.13 submit dist/catalog-draft.json --token-env HF_ADMIN_TOKEN
 ```
 
 官方插件仓库应通过 GitHub Actions 执行，并把签名 key 放在 repository secrets 中。
+如果插件使用多窗口 manifest 策略或当前窗口标题 SDK API，发布时 `min_app_version` 至少应为 `0.8.0`，`min_host_api_version` 至少应为 `0.2.13`。
 
 ## 审核模型
 

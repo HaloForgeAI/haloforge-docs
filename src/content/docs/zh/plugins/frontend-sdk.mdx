@@ -30,6 +30,8 @@ export default registerPlugin("dev.example.my-plugin", definePlugin({
 | `useHostAI()` | 复用 AIChat 模型和 transport |
 | `usePluginNavigation()` | 让 Level 0 插件内部页面接入 HaloForge 后退/前进 |
 | `usePluginWindows()` | 请求 HaloForge 通过多窗口分发器打开插件 route/resource |
+| `pluginCurrentWindow()` / `usePluginCurrentWindow()` | 更新或重置当前 HaloForge 窗口标题 |
+| `usePluginWindowTitle()` | 让系统窗口预览标题跟随当前插件文档 |
 | `AppSelect` | 渲染 HaloForge 风格下拉控件 |
 | `log()` / `createPluginLogger()` | 将插件诊断写入 HaloForge 应用日志 |
 
@@ -91,7 +93,6 @@ export function DocumentsPanel() {
     await windows.openResource(path, {
       route: "/document",
       params: { path },
-      preferredRole: "document",
       reuseKey: "resource",
       openMode: "reuse_or_new",
     });
@@ -100,6 +101,28 @@ export function DocumentsPanel() {
 ```
 
 `usePluginWindows()` 会和插件 manifest 的 `window` 策略一起交给宿主分发。插件声明意图；窗口创建、聚焦、复用、恢复和安全检查仍由 HaloForge 控制。
+
+## 原生窗口标题
+
+插件可以更新操作系统窗口预览里显示的原生标题，例如 Windows 任务栏缩略图标题。面向文档的插件可以用它显示当前文件名。
+
+```tsx
+import { usePluginWindowTitle } from "@haloforge/plugin-sdk";
+
+export function MarkdownPanel({ activeModule, document }) {
+  usePluginWindowTitle(
+    document?.name?.trim() || null,
+    {
+      subtitle: "Markdown",
+      enabled: activeModule === "markdown",
+    },
+  );
+
+  return <main>{document?.name ?? "No document"}</main>;
+}
+```
+
+HaloForge 会把插件标题格式化成 `Title - Subtitle - HaloForge`，并在拥有该标题的面板卸载或禁用 hook 时重置标题。隐藏或后台插件面板不能覆盖其他插件当前激活窗口的标题。
 
 ## AppSelect
 
