@@ -102,6 +102,10 @@ The plugin declares intent; the host still owns actual window creation, focus, s
 | `resource_param` | Query parameter that receives the resource path or URI. Defaults to `path`. |
 | `open_mode`, `reuse_key`, `allow_multiple` | Handler-level overrides for the plugin window policy. |
 
+`document_handlers` power host-owned file dispatch surfaces such as Open File and Open With. Source-specific host commands may still choose a stricter target: for example, File > Open Markdown is a current-window navigation action, while OS file activation and deep links can use the multi-window policy above.
+
+The application menu bar is not a plugin-controlled DOM surface. As of host API `0.2.13`, plugins should not assume they can inject arbitrary File/Edit/View menu items. If a plugin needs menu actions, add a documented, declarative manifest/SDK contribution first so HaloForge can keep labels, permissions, window targeting, and native menu behavior consistent.
+
 ## Common Host Capabilities
 
 | Capability | SDK surface |
