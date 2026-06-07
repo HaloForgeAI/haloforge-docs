@@ -2,7 +2,7 @@ import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 
 export default defineConfig({
-  site: "https://docs.haloforge.link",
+  site: "https://docs.haloforge.dev",
   integrations: [
     starlight({
       title: "HaloForge Docs",
