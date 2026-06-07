@@ -39,6 +39,11 @@ export default defineConfig({
           ],
         },
         {
+          label: "Enterprise",
+          translations: { zh: "企业版" },
+          items: [{ autogenerate: { directory: "enterprise" } }],
+        },
+        {
           label: "Plugin Development",
           translations: { zh: "插件开发" },
           items: [{ autogenerate: { directory: "plugins" } }],

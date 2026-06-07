@@ -11,6 +11,10 @@ hero:
       link: /plugins/
       icon: right-arrow
       variant: primary
+    - text: Enterprise quick start
+      link: /enterprise/
+      icon: right-arrow
+      variant: secondary
     - text: View SDK reference
       link: /sdk/
       icon: document
@@ -30,6 +34,9 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
   <Card title="Publishing" icon="rocket">
     Package, sign, submit, review, and publish plugins through the same workflow used by official HaloForge plugins.
   </Card>
+  <Card title="Enterprise operations" icon="building">
+    Find the real Enterprise entry points, local login options, admin console modules, KB reader routes, and first-run guidance.
+  </Card>
   <Card title="Command line" icon="terminal">
     Use `hf` to install local plugin packages, inspect plugin state, run launch profiles, and finish catalog admin tasks.
   </Card>
@@ -45,3 +52,9 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 ## Current Focus
 
 The first complete documentation block is plugin development. The next blocks should cover Agent Orchestra external providers, catalog publishing, enterprise server integration, Streamable HTTP MCP, and knowledge base APIs.
+
+## Enterprise Server
+
+- Start here if you are trying to open a local Enterprise deployment for the first time: [Enterprise Server](/enterprise/).
+- The main operator entry is typically `http://127.0.0.1:8788/admin`, not the root `/` page.
+- The browser KB reader is typically `http://127.0.0.1:8788/kb`.

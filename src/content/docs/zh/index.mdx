@@ -11,6 +11,10 @@ hero:
       link: /zh/plugins/
       icon: right-arrow
       variant: primary
+    - text: 企业版快速开始
+      link: /zh/enterprise/
+      icon: right-arrow
+      variant: secondary
     - text: 查看 SDK
       link: /zh/sdk/
       icon: document
@@ -30,6 +34,9 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
   <Card title="发布流程" icon="rocket">
     使用官方插件同一套流程完成打包、签名、提交、审核和上架。
   </Card>
+  <Card title="企业版运营" icon="building">
+    直接查看企业版真实入口、本地登录方式、管理后台模块、知识库阅读器路径和第一次使用说明。
+  </Card>
   <Card title="命令行" icon="terminal">
     使用 `hf` 安装本地插件包、查看插件状态、运行启动配置，并完成 catalog admin 操作。
   </Card>
@@ -45,3 +52,9 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 ## 当前重点
 
 第一批完整文档块是插件开发。后续应继续补 Agent Orchestra 外部 provider、catalog 发布、企业服务端集成、Streamable HTTP MCP 和知识库 API。
+
+## 企业版入口
+
+- 如果你是第一次打开本地 Enterprise，请先看[企业版文档](/zh/enterprise/)。
+- 管理员主入口通常是 `http://127.0.0.1:8788/admin`，不是根路径 `/`。
+- 知识库阅读器通常是 `http://127.0.0.1:8788/kb`。

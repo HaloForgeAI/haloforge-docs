@@ -1,0 +1,77 @@
+---
+title: 知识运营工作流
+description: 了解 HaloForge Enterprise Server 当前文档导入、KB 构建和 RAG 检索的主流程。
+---
+
+import { Card, CardGrid, Steps } from '@astrojs/starlight/components';
+
+当前 Enterprise 产品最成体系、最值得先用起来的部分，其实是**知识运营**。
+
+整体链路可以概括为：
+
+```text
+知识源或上传文件
+  -> 导入 / 同步任务
+  -> 标准化文档与分块
+  -> KB 页面与溯源关系
+  -> 可选 RAGFlow 索引
+  -> /kb 阅读器、/v1/kb API 和 /mcp 工具
+```
+
+## 主要操作区
+
+<CardGrid>
+  <Card title="连接器" icon="database">
+    注册和管理知识源，例如基于仓库或外部系统的内容入口。
+  </Card>
+  <Card title="同步任务" icon="refresh">
+    观察导入、同步、失败重试和数据集刷新情况。
+  </Card>
+  <Card title="KB 审查" icon="check-circle">
+    在真正应用结构变化前，先审查 KB change request 和 organizer proposal。
+  </Card>
+  <Card title="MCP Token" icon="key">
+    为 AI 客户端签发 KB 检索和阅读所需的长期或限域凭证。
+  </Card>
+</CardGrid>
+
+## 一个最实际的起步流程
+
+<Steps>
+  1. 登录 `/admin`。
+
+  2. 打开 `知识运营`。
+
+  3. 上传一个文档，或者先准备一个连接器型知识源。
+
+  4. 观察导入 / 同步任务直到完成。
+
+  5. 打开 `/kb`，确认导入内容已经可以在浏览器里阅读和搜索。
+
+  6. 如果部署启用了 RAGFlow，再到后台确认 dataset 和检索链路状态，之后再把搜索质量当成生产可用来评估。
+</Steps>
+
+## 很适合做本地首批知识内容的仓库
+
+`haloforge-docs` 本身就是一个不错的早期知识种子，因为它已经是结构化 Markdown/MDX 文档，天然带章节和导航。在 Enterprise KB 工作流尚在成形阶段时，它很适合作为 Starlight 类知识源来喂系统。
+
+## `/kb` 到底是干什么的
+
+`/kb` 不是后台管理页，它是一个单独的已鉴权知识阅读界面，负责：
+
+- 项目树浏览
+- 页面阅读
+- 搜索
+- 相关文章
+- 反向链接
+- 引用
+- 溯源
+
+也就是说，一个健康的 Enterprise 本地部署其实至少已经有两个浏览器界面：
+
+- `/admin` 给运营和管理员
+- `/kb` 给知识阅读和验证
+
+## MCP 什么时候用
+
+如果使用方是 AI 客户端、工具调用链或自动化，而不是人工在浏览器里点页面，那么应优先走 `/mcp`。这是 `kb.search`、项目列表、页面读取和带引用检索的标准接入面。
