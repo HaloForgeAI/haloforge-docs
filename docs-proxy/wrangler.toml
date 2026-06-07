@@ -1,0 +1,11 @@
+name = "haloforge-docs-proxy"
+main = "src/index.js"
+compatibility_date = "2026-05-07"
+workers_dev = true
+
+routes = [
+  { pattern = "docs.haloforge.dev", custom_domain = true }
+]
+
+[vars]
+UPSTREAM_ORIGIN = "https://haloforge-docs.pages.dev"
