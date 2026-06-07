@@ -2,7 +2,7 @@
 
 Official documentation site for HaloForge.
 
-- Production: https://docs.haloforge.link
+- Production: https://docs.haloforge.dev
 - Framework: Astro Starlight
 - Deployment target: Cloudflare Pages
 
